@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 
+
 import {
     IonApp,
     IonButton,
@@ -21,7 +22,10 @@ import {
     IonAlert,
 } from "@ionic/react";
 
-import { createOutline } from "ionicons/icons";
+// SQLite Imports
+
+
+import { createOutline, fingerPrint } from "ionicons/icons";
 const Result: React.FC<{
     itemList: { [itemNo: string]: string }[];
     onDelete: (arg0: string) => void;

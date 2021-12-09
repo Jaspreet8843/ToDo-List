@@ -30,13 +30,13 @@ const Controls: React.FC<{
     return (
       <IonRow>
       <IonCol>
-        <IonButton onClick={props.onAdd}>
+        <IonButton onClick={props.onAdd} expand="block" className="ion-margin">
           <IonIcon slot="start" icon={addOutline}></IonIcon>
           Add
         </IonButton>
       </IonCol>
       <IonCol>
-        <IonButton fill="outline" onClick={props.onClear}>
+        <IonButton fill="outline" onClick={props.onClear} expand="block" className="ion-margin">
           <IonIcon slot="start" icon={refreshOutline}></IonIcon>
           Clear
         </IonButton>

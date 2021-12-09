@@ -19,6 +19,8 @@ import {
   IonAlert,
 } from "@ionic/react";
 
+import { Storage } from '@ionic/storage';
+
 import Controls from "./components/controls";
 import Result from "./components/result";
 
@@ -44,12 +46,30 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { todayOutline } from "ionicons/icons";
 
+
 const App: React.FC = () => {
   const [addItem, setAddItem] = useState<{ [key: string]: string }[]>([]);
   const itemInput = useRef<HTMLIonInputElement>(null);
   const [popUp, setPopUp] = useState<string>();
-
+  
   const [count, setCount] = useState(0);
+  const[syncFlag, setSyncFlag] = useState(true);
+  
+  useEffect(() => {
+    const store = new Storage();
+    store.create();
+    store.set('name',addItem);
+    store.set('count',count);
+    if(syncFlag)
+    {
+      store.get('name').then((result)=>{setAddItem(result)});
+      store.get('count').then((result)=>{setCount(result)});
+      setSyncFlag(false);
+    }
+    // store.forEach((key, value, index) => {
+    //   console.log(key,value);
+    // });
+  },[addItem]);
 
   const addBtn = () => {
     let item: any = {};
@@ -59,6 +79,7 @@ const App: React.FC = () => {
     if (!item) {
       return;
     }
+    
     setAddItem([...addItem, item]);
     itemInput.current!.value = "";
   };
@@ -110,12 +131,12 @@ const App: React.FC = () => {
             </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent className="ion-padding">
-          <IonItem>
+        <IonContent className="">
+          <IonItem className="ion-margin">
             <IonLabel position="floating">Your item</IonLabel>
             <IonInput ref={itemInput}></IonInput>
           </IonItem>
-          <IonGrid className="ion-text-center ion-margin">
+          <IonGrid className="ion-text-center">
             <Controls onAdd={addBtn} onClear={clearBtn} />
             {addItem.length > 0 && (
               <Result onDelete={deleteItem} itemList={addItem} setItemList={setAddItem}/>
