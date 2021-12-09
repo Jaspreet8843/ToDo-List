@@ -6,7 +6,7 @@ Simple CRUD application to learn IONIC framework
 <td>1
 </td>
 <td>
-<img src="README/1.jpeg"/>
+<img src="README/1.jpeg" width=200/>
 </td>
 </tr>
 
@@ -14,7 +14,7 @@ Simple CRUD application to learn IONIC framework
 <td>2
 </td>
 <td>
-<img src="README/2.jpeg"/>
+<img src="README/2.jpeg" width=200/>
 </td>
 </tr>
 
@@ -22,7 +22,7 @@ Simple CRUD application to learn IONIC framework
 <td>3
 </td>
 <td>
-<img src="README/3.jpeg"/>
+<img src="README/3.jpeg" width=200/>
 </td>
 </tr>
 
@@ -30,7 +30,7 @@ Simple CRUD application to learn IONIC framework
 <td>4
 </td>
 <td>
-<img src="README/4.jpeg"/>
+<img src="README/4.jpeg" width=200/>
 </td>
 </tr>
 
@@ -38,7 +38,7 @@ Simple CRUD application to learn IONIC framework
 <td>5
 </td>
 <td>
-<img src="README/5.jpeg"/>
+<img src="README/5.jpeg" width=200/>
 </td>
 </tr>
 
@@ -46,7 +46,7 @@ Simple CRUD application to learn IONIC framework
 <td>6
 </td>
 <td>
-<img src="README/6.jpeg"/>
+<img src="README/6.jpeg" width=200/>
 </td>
 </tr>
 
@@ -54,7 +54,7 @@ Simple CRUD application to learn IONIC framework
 <td>7
 </td>
 <td>
-<img src="README/7.jpeg"/>
+<img src="README/7.jpeg" width=200/>
 </td>
 </tr>
 
@@ -62,7 +62,7 @@ Simple CRUD application to learn IONIC framework
 <td>8
 </td>
 <td>
-<img src="README/8.jpeg"/>
+<img src="README/8.jpeg" width=200/>
 </td>
 </tr>
 
