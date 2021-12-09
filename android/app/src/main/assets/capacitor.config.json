@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.app",
+	"appName": "to-do-app",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
