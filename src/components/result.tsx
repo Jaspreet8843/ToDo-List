@@ -26,6 +26,10 @@ import {
 
 
 import { createOutline, fingerPrint } from "ionicons/icons";
+
+
+var value = '';
+
 const Result: React.FC<{
     itemList: { [itemNo: string]: string }[];
     onDelete: (arg0: string) => void;
@@ -45,6 +49,7 @@ const Result: React.FC<{
             }
         }
         setEdit(true);
+        value = [...props.itemList][curItem.current]['value'];
     };
 
     const saveEdit = (data:string) => {    //itemNo:{[itemNo:string]:string}
@@ -84,8 +89,8 @@ const Result: React.FC<{
                                                 { 
                                                     name: 'Item',
                                                     type: 'text',
-                                                    placeholder: 'Item',
-                                                    value: [...props.itemList][curItem.current]['value'],
+                                                    placeholder: 'Item',                                                  
+                                                    value: value,
                                                     
                                                 }]}
                                             buttons={[
