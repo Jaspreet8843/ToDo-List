@@ -17,6 +17,8 @@ import {
   IonList,
   IonCardHeader,
   IonAlert,
+  IonTabs,
+  IonRouterOutlet,
 } from "@ionic/react";
 
 import { Storage } from '@ionic/storage';
@@ -45,6 +47,10 @@ import "./theme/variables.css";
 import React, { useEffect, useRef, useState } from "react";
 
 import { todayOutline } from "ionicons/icons";
+import { Route } from "react-router";
+import { issetSession, LogoutUser } from "./firebaseConfig";
+
+ issetSession();
 
 
 const App: React.FC = () => {
@@ -126,8 +132,11 @@ const App: React.FC = () => {
         <IonHeader>
           <IonToolbar color="primary">
             <IonTitle>
-              <IonIcon icon={todayOutline} />
-              ToDo List
+              <div className="ion-margin-vertical ion-float-left">
+                <IonIcon icon={todayOutline} className="ion-margin-horizontal"/>
+                ToDo List
+              </div>
+              <IonButton onClick={LogoutUser} color="warning" className="ion-float-right ion-margin-vertical">LogOut</IonButton>
             </IonTitle>
           </IonToolbar>
         </IonHeader>

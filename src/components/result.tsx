@@ -29,6 +29,8 @@ import { createOutline, fingerPrint } from "ionicons/icons";
 
 
 var value = '';
+let lastId = 0;
+
 
 const Result: React.FC<{
     itemList: { [itemNo: string]: string }[];
@@ -80,7 +82,7 @@ const Result: React.FC<{
                         <IonList>
                             <IonGrid>
                                 {props.itemList.map((item) => (
-                                    <IonRow key={item['itemNo']}>
+                                    <IonRow key={lastId++}> 
                                         <IonAlert
                                             isOpen={edit}
                                             message='EDIT'
