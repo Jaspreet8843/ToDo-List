@@ -34,7 +34,7 @@ import {
   
   } from "@ionic/react";
 import { Link } from 'react-router-dom';
-import { fetchItems, issetSession, LoginUser, LogoutUser, popItem, pushItem, setChecked } from '../firebaseConfig';
+import { checkAll, deleteAll, fetchItems, issetSession, LoginUser, LogoutUser, popItem, pushItem, setChecked, unCheckAll, updateItem } from '../firebaseConfig';
 import { addOutline, arrowBackOutline, atCircleOutline, calendarOutline, checkmarkCircleOutline, closeOutline, createOutline, ellipseOutline, ellipsisVerticalOutline, home, idCard, logInOutline, logOutOutline, menu, refreshOutline, trashBinOutline } from 'ionicons/icons';
 import { extractDate, parseISOString, Toast } from '../features';
 import { doc, getDoc, getFirestore } from "firebase/firestore";
@@ -45,25 +45,25 @@ const EditItemModal: React.FC<{
     itemName: any;
     itemDatetime:any;
     onDismiss: () => void;
-  }> = ({curID, itemName, itemDatetime, onDismiss }) => (
+    setItemName: (key:any) => any;
+    updateItemHandler: (key1:any,key2:any) => void;
+  }> = ({curID, itemName, itemDatetime, onDismiss, setItemName, updateItemHandler}) => (
     <div className='edit-modal'>
-      ID: {curID}
-      <IonContent>
-          <IonItem>
-            <IonLabel>Item:</IonLabel>
-            <IonInput type='text' value={itemName}></IonInput>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Created On:</IonLabel>
-            <IonInput type='text' value={new Date(itemDatetime).getDate()+'/'+(new Date(itemDatetime).getMonth()+1)+'/'+(new Date(itemDatetime).getFullYear())}></IonInput>
-          </IonItem>
-          <IonItem>
-            <IonButton>Update</IonButton>
-          </IonItem>
-      </IonContent>
-      <IonButton expand="block" onClick={() => onDismiss()}>
-        Close
-      </IonButton>
+        <IonButton onClick={() => onDismiss()} color="warning" className="close-button"> <h1><IonIcon icon={closeOutline}></IonIcon></h1></IonButton>
+        <IonItem>
+        <IonLabel position='stacked'>Item:</IonLabel>
+        <IonInput type='text' value={itemName}  onIonChange={(e) => {setItemName(e.detail.value)}}></IonInput>
+        </IonItem>
+        <br/>
+        <IonItem>
+        <IonLabel position='stacked'>Created On:</IonLabel>
+        <IonInput disabled type='text' value={new Date(itemDatetime).getDate()+'/'+(new Date(itemDatetime).getMonth()+1)+'/'+(new Date(itemDatetime).getFullYear())}></IonInput>
+        </IonItem>
+        
+        <IonButton className="update-btn" expand='block' color='dark' onClick={()=>{updateItemHandler(curID,itemName);onDismiss()}}>Update</IonButton>
+        <div className='edit-modal-bg'>
+        </div>
+    
     </div>
   );
 
@@ -112,12 +112,18 @@ const Home: React.FC = () => {
     const handleCalendarDismiss = () => {
         hideCalendarModal();
     }
+
+    const updateItemHandler = (id:any, text:any) => {
+        updateItem(id,text,refreshItems);
+    }
     
     const [showEditModal, hideEditModal] = useIonModal(EditItemModal, {
         curID,
         itemName,
+        setItemName:setitemName,
         itemDatetime,
         onDismiss: handleEditDismiss,
+        updateItemHandler: updateItemHandler,
       });
 
       const [showCalendarModal, hideCalendarModal] = useIonModal(SelectDateModal, {
@@ -136,8 +142,11 @@ const Home: React.FC = () => {
     })
     
     function AddItem(){
-        pushItem(input, extractDate(date),refreshItems);
-        setInput('');
+        if(input!='')
+        {
+            pushItem(input, extractDate(date),refreshItems);
+            setInput('');
+        }
         //setItems((items:any)=>items.concat(input));
        
     }
@@ -194,6 +203,18 @@ const Home: React.FC = () => {
 
    }
 
+   function clearAll(){
+    deleteAll(date).then(()=>refreshItems());
+   }
+   
+   function markAll(){
+    checkAll(date).then(()=>refreshItems());
+   }
+
+   function unMarkAll(){
+    unCheckAll(date).then(()=>refreshItems());
+   }
+
    useEffect(()=>{
     refreshItems();
    },[date])
@@ -245,20 +266,47 @@ const Home: React.FC = () => {
                 <IonList>
                     <IonListHeader>Options</IonListHeader>
                     <IonMenuToggle auto-hide="false">
-                        <IonItem button>
+                        <IonItem button onClick={()=>{showAlert({
+                                                    cssClass: 'my-css',
+                                                    header: 'Clear all',
+                                                    message: 'Are you sure?',
+                                                    buttons: [
+                                                        'Cancel',
+                                                        { text: 'Ok', handler: (d) => clearAll() },
+                                                    ],
+                                                    onDidDismiss: (e) => console.log('did dismiss'),
+                                                })}}>
                             <IonIcon slot="start" icon={refreshOutline}></IonIcon>
                             <IonLabel>
                                 Clear
                             </IonLabel>
                         </IonItem>
                         
-                        <IonItem button >
+                        <IonItem button onClick={()=>{showAlert({
+                                                    cssClass: 'my-css',
+                                                    header: 'Mark all',
+                                                    message: 'Are you sure?',
+                                                    buttons: [
+                                                        'Cancel',
+                                                        { text: 'Ok', handler: (d) => markAll() },
+                                                    ],
+                                                    onDidDismiss: (e) => console.log('did dismiss'),
+                                                })}}>
                             <IonIcon slot="start" icon={checkmarkCircleOutline}></IonIcon>
                             <IonLabel>
                                 Mark all done
                             </IonLabel>
                         </IonItem>
-                        <IonItem button >
+                        <IonItem button onClick={()=>{showAlert({
+                                                    cssClass: 'my-css',
+                                                    header: 'Unmark all',
+                                                    message: 'Are you sure?',
+                                                    buttons: [
+                                                        'Cancel',
+                                                        { text: 'Ok', handler: (d) => unMarkAll() },
+                                                    ],
+                                                    onDidDismiss: (e) => console.log('did dismiss'),
+                                                })}}>
                             <IonIcon slot="start" icon={ellipseOutline}></IonIcon>
                             <IonLabel>
                                 Mark all undone

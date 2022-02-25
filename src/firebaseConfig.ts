@@ -161,3 +161,61 @@ export async function popItem(id:any, refresh:any){
 }
 
 
+export async function updateItem(id:any, value:any, refreshItems:any) {
+    const db = getFirestore();
+    const docRef = doc(db,'itemlist',id)
+    await updateDoc(docRef,{
+        item: value,
+    }).then(()=>{
+        refreshItems();
+        Toast("Item updated.")
+    })
+}
+
+export async function deleteAll(date:any){
+    return new Promise(function(resolve, reject){
+        const auth = getAuth();
+        const db = getFirestore();
+        issetSession();
+        onAuthStateChanged(auth, async(user) => {
+        const querySnapshot = await getDocs(query(collection(db, "itemlist"),where("user","==",user?.uid),where("datefor","==",date)));
+        querySnapshot.forEach(async (item: any) => {
+            //console.log(await getDoc(item));
+            await deleteDoc(item.ref);
+        });
+        resolve(Toast("Cleared Successfully."))
+    });
+});
+}
+
+export async function checkAll(date:any){
+    return new Promise(function(resolve, reject){
+        const auth = getAuth();
+        const db = getFirestore();
+        issetSession();
+        onAuthStateChanged(auth, async(user) => {
+        const querySnapshot = await getDocs(query(collection(db, "itemlist"),where("user","==",user?.uid),where("datefor","==",date)));
+        querySnapshot.forEach(async (item: any) => {
+            //console.log(await getDoc(item));
+            await updateDoc(item.ref,{checked:true});
+        });
+        resolve(Toast("All marked."))
+    });
+});
+}
+
+export async function unCheckAll(date:any){
+    return new Promise(function(resolve, reject){
+        const auth = getAuth();
+        const db = getFirestore();
+        issetSession();
+        onAuthStateChanged(auth, async(user) => {
+        const querySnapshot = await getDocs(query(collection(db, "itemlist"),where("user","==",user?.uid),where("datefor","==",date)));
+        querySnapshot.forEach(async (item: any) => {
+            //console.log(await getDoc(item));
+            await updateDoc(item.ref,{checked:false});
+        });
+        resolve(Toast("All unchecked."))
+    });
+});
+}
