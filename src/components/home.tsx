@@ -30,23 +30,64 @@ import {
     IonModal,
     useIonModal,
     useIonAlert,
+    IonDatetime,
   
   } from "@ionic/react";
 import { Link } from 'react-router-dom';
 import { fetchItems, issetSession, LoginUser, LogoutUser, popItem, pushItem, setChecked } from '../firebaseConfig';
-import { addOutline, arrowBackOutline, atCircleOutline, calendarOutline, checkmarkCircleOutline, createOutline, ellipseOutline, ellipsisVerticalOutline, home, idCard, logInOutline, logOutOutline, menu, refreshOutline, trashBinOutline } from 'ionicons/icons';
-import { extractDate, Toast } from '../features';
+import { addOutline, arrowBackOutline, atCircleOutline, calendarOutline, checkmarkCircleOutline, closeOutline, createOutline, ellipseOutline, ellipsisVerticalOutline, home, idCard, logInOutline, logOutOutline, menu, refreshOutline, trashBinOutline } from 'ionicons/icons';
+import { extractDate, parseISOString, Toast } from '../features';
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 
-const Body: React.FC<{
+const EditItemModal: React.FC<{
     curID: any;
+    itemName: any;
+    itemDatetime:any;
     onDismiss: () => void;
-  }> = ({curID, onDismiss }) => (
-    <div>
+  }> = ({curID, itemName, itemDatetime, onDismiss }) => (
+    <div className='edit-modal'>
       ID: {curID}
+      <IonContent>
+          <IonItem>
+            <IonLabel>Item:</IonLabel>
+            <IonInput type='text' value={itemName}></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonLabel>Created On:</IonLabel>
+            <IonInput type='text' value={new Date(itemDatetime).getDate()+'/'+(new Date(itemDatetime).getMonth()+1)+'/'+(new Date(itemDatetime).getFullYear())}></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonButton>Update</IonButton>
+          </IonItem>
+      </IonContent>
       <IonButton expand="block" onClick={() => onDismiss()}>
         Close
       </IonButton>
+    </div>
+  );
+
+// Modal to set set date for filtering items
+
+const SelectDateModal: React.FC<{
+    date:any,
+    updateDate: any;
+    onDismiss: () => void;
+  }> = ({date,updateDate, onDismiss }) => (
+    <div className='date-modal'>
+      <IonButton onClick={() => onDismiss()} color="warning" className="close-button">
+      <h1><IonIcon icon={closeOutline}></IonIcon></h1>
+      </IonButton>
+      <IonContent>
+        <IonItem>
+            <IonLabel>Set Date</IonLabel>
+            <IonDatetime value={new Date(date).toISOString()} onIonChange={(e) => {updateDate(e.detail.value);onDismiss()}}>
+                            {/* {"<"+new Date(date).getDate()+'/'+(new Date(date).getMonth()+1)+'/'+(new Date(date).getFullYear())+">"} */}
+                        </IonDatetime>
+        </IonItem>
+      </IonContent>
+        <div className='date-modal-bg'>
+        </div>
     </div>
   );
 
@@ -56,18 +97,33 @@ const Home: React.FC = () => {
     const [items,setItems] = useState<{ [key: string]: string }[]>([]);
     const [date, setDate] = useState(extractDate(Date()));
     const[curID, setCurID] = useState('');
+    const[itemName, setitemName] = useState('');
+    const[itemDatetime, setItemDatetime] = useState('');
 
 
     const[showAlert] = useIonAlert();
 
 
 
-    const handleDismiss = () => {
-        dismiss();
+    const handleEditDismiss = () => {
+        hideEditModal();
     };
-    const [present, dismiss] = useIonModal(Body, {
+
+    const handleCalendarDismiss = () => {
+        hideCalendarModal();
+    }
+    
+    const [showEditModal, hideEditModal] = useIonModal(EditItemModal, {
         curID,
-        onDismiss: handleDismiss,
+        itemName,
+        itemDatetime,
+        onDismiss: handleEditDismiss,
+      });
+
+      const [showCalendarModal, hideCalendarModal] = useIonModal(SelectDateModal, {
+        date,
+        updateDate,
+        onDismiss: handleCalendarDismiss,
       });
 
 
@@ -79,10 +135,10 @@ const Home: React.FC = () => {
         LogoutUser();
     })
     
-    async function AddItem(){
-        pushItem(input, extractDate(Date.now()));
+    function AddItem(){
+        pushItem(input, extractDate(date),refreshItems);
+        setInput('');
         //setItems((items:any)=>items.concat(input));
-        refreshItems();
        
     }
     function refreshItems() 
@@ -92,6 +148,7 @@ const Home: React.FC = () => {
             .then(
             function(res:any)
             {
+                setItems([]);
                 res.forEach((ele:any)=> {
                     var data = {
                         item: ele.data().item,
@@ -108,7 +165,6 @@ const Home: React.FC = () => {
 
 
     function drawLineThrough(id:any,res:any){
-        console.log("draw");
         if(res)
         {
             document.getElementById("item"+id)?.style.setProperty("text-decoration","line-through");
@@ -129,12 +185,33 @@ const Home: React.FC = () => {
 
 
     function deleteItem(id: any){
-        popItem(id);
-        refreshItems();
+        popItem(id, refreshItems);
     }
 
-// useEffect(()=>{console.log(items)},[items]);
+   function updateDate(d:any){
+       const date = parseISOString(d) as unknown as number;
+       setDate(extractDate(date));
 
+   }
+
+   useEffect(()=>{
+    refreshItems();
+   },[date])
+
+   useEffect(()=>{
+      const func = async () =>{
+            const db = getFirestore();
+            const docRef = doc(db, "itemlist", curID);
+            const docSnap = await getDoc(docRef);
+            setitemName(docSnap.data()?.item);
+            setItemDatetime(docSnap.data()?.timestamp);
+       }
+       if(curID!='')
+       {
+           func()
+       }
+
+   },[curID])
 
   return (
       <IonApp>
@@ -187,11 +264,11 @@ const Home: React.FC = () => {
                                 Mark all undone
                             </IonLabel>
                         </IonItem>
-                        <IonItem button >
+                        <IonItem button onClick={()=>{showCalendarModal({cssClass: 'my-class',})}}>
                             <IonIcon slot="start" icon={calendarOutline}></IonIcon>
-                            <IonLabel>
-                                Go to date
-                            </IonLabel>
+                                <IonLabel>
+                                    Go to date
+                                </IonLabel>
                         </IonItem>
                     </IonMenuToggle>
                         
@@ -214,7 +291,9 @@ const Home: React.FC = () => {
                 </h2>
                 <h5>
                     <p className="title-date">
-                        {"<"+new Date(date).getDate()+'/'+(new Date(date).getMonth()+1)+'/'+(new Date(date).getFullYear())+">"}
+                        <IonDatetime value={new Date(date).toISOString()} onIonChange={(e) => {updateDate(e.detail.value)}}>
+                            {/* {"<"+new Date(date).getDate()+'/'+(new Date(date).getMonth()+1)+'/'+(new Date(date).getFullYear())+">"} */}
+                        </IonDatetime>
                     </p>
                 </h5>
             </div>
@@ -228,7 +307,7 @@ const Home: React.FC = () => {
                                     <IonCol size='1'>
                                         <IonCheckbox checked={item.checked} onIonChange={(e:any)=>isChecked(item.docID,e)}></IonCheckbox>
                                     </IonCol>
-                                    <IonCol size="10" id={"item"+item.docID} onClick={()=>{present({cssClass: 'my-class',});setCurID(item.docID)}}>
+                                    <IonCol size="10" id={"item"+item.docID} onClick={()=>{showEditModal({cssClass: 'my-class',}); setCurID(item.docID)}}>
 
                                             {item.item}
                                     
@@ -258,7 +337,7 @@ const Home: React.FC = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <IonInput placeholder="Item" className='ion-padding' type='text' onIonChange={(e:any)=>setInput(e.target.value)}/>
+                                        <IonInput placeholder="Item" value={input} className='ion-padding' type='text' onIonChange={(e:any)=>{setInput(e.target.value)}}/>
                                     </td>
                                     <td>
                                         <IonButton color="dark" expand='block' size='large' onClick={AddItem}>

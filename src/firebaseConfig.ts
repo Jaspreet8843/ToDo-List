@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc,addDoc, setDoc,updateDoc,deleteDoc,getDocs, query, orderBy, where } from "firebase/firestore";
+import { getFirestore, collection, doc,addDoc, setDoc,getDoc,updateDoc,deleteDoc,getDocs, query, orderBy, where } from "firebase/firestore";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -47,7 +47,6 @@ export async function LoginUser(email: string, password: string) {
         const user = userCredential.user;
         Toast('Successfully logged in!');
         var usr = auth.currentUser;
-        console.log(usr);
         window.location.assign('/home');
     })
     .catch((error)=>{
@@ -102,14 +101,13 @@ export async function fetchItems(date:any){
         querySnapshot.forEach((doc: any) => {
             items.push(doc);
         })
-        console.log(items);
         resolve(items);
     })
 });
 //console.log(`${doc.id} => ${doc.data().item}`);
 }
 
-export async function pushItem(item :string, datefor:number){
+export async function pushItem(item :string, datefor:number, refresh:any){
     const db = getFirestore();
     const auth = getAuth();
     const docData = {
@@ -124,6 +122,7 @@ export async function pushItem(item :string, datefor:number){
     await addDoc(collection(db,'itemlist'),docData)
     .then(
         function(){
+            refresh();
             Toast("Item added!");
         })
         .catch(
@@ -150,13 +149,15 @@ export async function setChecked(id:any,res:any){
     });
 }
 
-export async function popItem(id:any){
+export async function popItem(id:any, refresh:any){
     const db = getFirestore();
 
     const docRef = doc(db,'itemlist',id);
     await deleteDoc(docRef)
     .then(function(){
+        refresh();
         Toast("Item deleted.")
     })
-
 }
+
+
