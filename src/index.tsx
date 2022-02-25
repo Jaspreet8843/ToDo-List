@@ -14,6 +14,7 @@ from "@ionic/react";
 import { Redirect, Route, Router, useHistory } from 'react-router';
 import { IonReactRouter } from '@ionic/react-router';
 import { issetSession } from './firebaseConfig';
+import Home from './components/home';
 
 
 
@@ -22,7 +23,8 @@ ReactDOM.render(
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route path="/home" component= {App} exact/>
+          <Route path="/app" component= {App} exact/>
+          <Route path="/home" component= {Home} exact/>
           <Route path="/login" component= {Login} exact/>
           <Route path="/register" component= {Register} exact/>
         </IonRouterOutlet>

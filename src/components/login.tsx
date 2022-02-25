@@ -18,7 +18,7 @@ import {
   } from "@ionic/react";
 import { Link } from 'react-router-dom';
 import { issetSession, LoginUser, LogoutUser } from '../firebaseConfig';
-import { logInOutline } from 'ionicons/icons';
+import { arrowBackOutline, logInOutline } from 'ionicons/icons';
 import { Toast } from '../features';
 
   const Login: React.FC = () => {
@@ -36,32 +36,23 @@ import { Toast } from '../features';
         }
     }
 
-
-
-
   return (
-    <IonPage>
-        <IonHeader>
-            <IonToolbar color='primary'>
-                <IonTitle>
-                    Login
-                </IonTitle>
-            </IonToolbar>
-        </IonHeader>
-        <IonContent className='ion-padding ion-text-center'>
-            <IonItem className="ion-margin">
-                <IonLabel position="floating">Email</IonLabel>
-                <IonInput className='ion-padding' onIonChange={(e:any)=>setUsername(e.target.value)}/>
-            </IonItem>
-            <IonItem className="ion-margin">
-                <IonLabel position="floating">Password</IonLabel>
-                <IonInput className='ion-padding ' type='password' onIonChange={(e:any)=>setPassword(e.target.value)}/>
-            </IonItem>
-            <IonButton onClick={Login}>
-                <IonIcon icon={logInOutline} className="ion-padding-end"/>
-                Login
-            </IonButton>
-            <p>Don't have an account? <Link to='/register'>Register</Link></p>
+    <IonPage className='main-content'>
+        <div className='black-bg'></div>
+        <div className='login-header'>
+            <h2><IonIcon icon={arrowBackOutline} /></h2>
+            <h1>Log In</h1>
+        </div>
+        <IonContent className='ion-text-center'>
+            <div className='login-form'>
+                <IonInput placeholder='Email' className='ion-padding' onIonChange={(e:any)=>setUsername(e.target.value)}/>
+                <IonInput placeholder="Password" className='ion-padding ' type='password' onIonChange={(e:any)=>setPassword(e.target.value)}/>
+                <IonButton color="dark" expand='block' shape='round' size='large' onClick={Login}>
+                    <IonIcon icon={logInOutline} className="ion-padding-end"/>
+                    Log In
+                </IonButton>
+                <p>Don't have an account? <Link to='/register'>Register</Link></p>
+            </div>
         </IonContent>
     </IonPage>
     );

@@ -1,9 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
+
+.main-content{
+
+  --ion-background-color: #ffc409;
+  --overflow: hidden !important;
+}
+
+.home-header{
+  height: 17vh;
+  border-radius: 50px 50px 0px 0px;
+  background-color: #ffc409;
+  padding:0 0 20px 40px;
+  box-shadow: 10px black;
+  border-radius: 0 0 240px 50%/30px;
+  text-align: center;
+}
+
+
+.home-header .menu{
+  position: fixed;
+  top:1em;
+  right: 1em;
+}
+
+.home-header .title-text{
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.home-header .title-date{
+  position: fixed;
+  left: 50%;
+  top:2em;
+  transform: translateX(-50%);
+}
+
+.home-body{
+  background-color: white
+}
+
+.home-add-items{
+  position: fixed;
+  bottom: 0;
+  border-radius: 20% 20% 0 0;
+  padding-top:0.5em;
+  background-color: whitesmoke;
+  border-top: 2px solid #d4d4d1b4;
+}
+.home-add-items table{
+  padding: 10px;
+  box-shadow: 10px black;
+  width: 100vw;
+}
+.home-add-items table td{
+  padding: 2%;
+}
+.home-add-items ion-input{
+ background-color: white;
+ border: 1px solid lightgray;
+ width: 70vw;
+ text-align: left;
+ margin:0 3px;
+ -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+}
+
+.home-add-items ion-button{
+  --border-radius: 50%;
+  width: 60px;
+  margin: 10px;
+}
+
+.home-item-list ion-list{
+  padding-bottom: 100px;
+}
+
+.home-item-list ion-row{
+  margin:1em;
+}
+
+.home-item-list ion-col{
+  text-align: left;
+}
+
+.home-item-list ion-checkbox {
+  background: #ffffff;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 4px;
+  border-color: grey !important;
+  --height: 35px;
+  --width: 35px;
+  --checkmark-color: #4870f2;
+  --background-checked: #ffffff;
+  --border-color: #ffffff;
+  --border-color-checked: #ffffff;
+}
+
+.black-bg{
+  background-color:#000000;
+  position: fixed;
+  top: 0;
+  height: 10vh;
+  width: 100vw;
+  z-index: -1;
+}
+
+.login-header {
+  height: 30vh;
+  border-radius: 50px 50px 0px 0px;
+  box-shadow: 20px;
+  background-color: #ffc409;
+  padding:0 40px;
+  box-shadow: 10px black;
+}
+
+.login-header h2{
+  margin-top: 7vh;
+}
+.login-header h1{
+  margin-top: 7vh;
+  font-weight: bolder;
+}
+
+.login-form{
+  padding: 20px;
+  padding-top: 10vh;
+ background-color: white;
+ border-radius: 50px 50px 0px 0px;
+ height: 100vh;
+
+}
+
+.login-form ion-item{
+  --ion-background-color: white;
+}
+
+.login-form ion-input{
+  margin: 20px 0;
+  background-color: rgb(238, 238, 238);
+  text-align: left;
+  -moz-border-radius: 50px;
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+
+}
+.login-form ion-button{
+  border-radius: 10px !important;
+}
 
 /** Ionic CSS Variables **/
 :root {
   /** primary **/
+  --ion-font-family: 'Righteous', sans-serif;
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;

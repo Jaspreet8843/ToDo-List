@@ -20,7 +20,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import { issetSession, RegisterUser } from '../firebaseConfig';
-import { logInOutline } from 'ionicons/icons';
+import { arrowBackOutline, logInOutline } from 'ionicons/icons';
 
 import { Toast, ToastOptions } from "../features";
 
@@ -46,29 +46,22 @@ import { Toast, ToastOptions } from "../features";
 
     issetSession();
   return (
-    <IonPage>
-        <IonHeader>
-            <IonToolbar color='primary'>
-                <IonTitle>
-                    Register
-                </IonTitle>
-            </IonToolbar>
-        </IonHeader>
-        <IonContent className='ion-padding ion-text-center'>
-            <IonItem className="ion-margin">
-                <IonLabel position="floating">Email</IonLabel>
-                <IonInput className='ion-padding' onIonChange={(e:any)=>setUsername(e.target.value)}/>
-            </IonItem>
-            <IonItem className="ion-margin">
-                <IonLabel position="floating">Password</IonLabel>
-                <IonInput className='ion-padding' type='password' onIonChange={(e:any)=>setPassword(e.target.value)}/>
-            </IonItem>
-            <IonItem className="ion-margin">
-                <IonLabel position="floating">Confirm Password</IonLabel>
-                <IonInput className='ion-padding' type='password' onIonChange={(e:any)=>setCPassword(e.target.value)}/>
-            </IonItem>
-            <IonButton onClick={Register}><IonIcon icon={logInOutline} className="ion-padding-end"/>Register</IonButton>
-            <p>Already registered? <Link to='/login'>Log In</Link></p>
+    <IonPage className='main-content'>
+        <div className='black-bg'></div>
+        <div className='login-header'>
+            <h2><IonIcon icon={arrowBackOutline} /></h2>
+            <h1>Sign Up</h1>
+        </div>
+        <IonContent className='ion-text-center'>
+            <div className='login-form'>
+              <IonInput placeholder='Email' className='ion-padding' onIonChange={(e:any)=>setUsername(e.target.value)}/>
+              <IonInput placeholder="Password" className='ion-padding ' type='password' onIonChange={(e:any)=>setPassword(e.target.value)}/>
+              <IonInput placeholder="Confirm Password" className='ion-padding' type='password' onIonChange={(e:any)=>setCPassword(e.target.value)}/>
+              <IonButton color="dark" expand='block' shape='round' size='large' onClick={Register}>
+                  Register
+              </IonButton>
+              <p>Already registered? <Link to='/login'>Log In</Link></p>
+            </div>
         </IonContent>
     </IonPage>
     );

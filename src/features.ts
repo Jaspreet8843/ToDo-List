@@ -37,3 +37,9 @@ export async function ToastOptions(header:string, message:string) {
     const { role } = await toast.onDidDismiss();
     console.log('onDidDismiss resolved with role', role);
   }
+
+
+export function extractDate(thedate:any) {
+  const d = new Date(thedate);
+  return d.setHours(0,0,0,0);
+}

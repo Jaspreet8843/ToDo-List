@@ -1,14 +1,15 @@
 // Import the functions you need from the SDKs you need
-import { IonFab } from "@ionic/react";
+
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc,addDoc, setDoc,updateDoc,deleteDoc,getDocs, query, orderBy, where } from "firebase/firestore";
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { isUndefined } from "util";
-import { Toast, ToastOptions } from "./features";
+import { extractDate, Toast, ToastOptions } from "./features";
 
 
 
@@ -89,3 +90,73 @@ export function issetSession(){
     });
 }
 
+export async function fetchItems(date:any){
+    return new Promise(function(resolve, reject){
+        var items = [] as any;
+        const auth = getAuth();
+        const db = getFirestore();
+        issetSession();
+    
+        onAuthStateChanged(auth, async(user) => {
+        const querySnapshot = await getDocs(query(collection(db, "itemlist"),where("user","==",user?.uid),where("datefor","==",date),orderBy('timestamp')));
+        querySnapshot.forEach((doc: any) => {
+            items.push(doc);
+        })
+        console.log(items);
+        resolve(items);
+    })
+});
+//console.log(`${doc.id} => ${doc.data().item}`);
+}
+
+export async function pushItem(item :string, datefor:number){
+    const db = getFirestore();
+    const auth = getAuth();
+    const docData = {
+        item: item,
+        timestamp: Date.now(),
+        checked: false,
+        user: auth.currentUser?.uid,
+        datefor: datefor
+    }
+    //var d = new Date(1382086394000).getDate();            to get date
+
+    await addDoc(collection(db,'itemlist'),docData)
+    .then(
+        function(){
+            Toast("Item added!");
+        })
+        .catch(
+            function(){
+                Toast("Some error occured!");
+            });
+}
+
+export async function setChecked(id:any,res:any){
+    const db = getFirestore();
+
+    const docRef = doc(db,'itemlist',id);
+    await updateDoc(docRef,{
+        checked:res
+    }).then(function(){
+        if(res)
+        {
+            Toast('Item checked off.')
+        }
+        else
+        {
+            Toast('Item unchecked.');
+        }
+    });
+}
+
+export async function popItem(id:any){
+    const db = getFirestore();
+
+    const docRef = doc(db,'itemlist',id);
+    await deleteDoc(docRef)
+    .then(function(){
+        Toast("Item deleted.")
+    })
+
+}

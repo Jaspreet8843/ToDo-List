@@ -117,10 +117,6 @@ const App: React.FC = () => {
 
   
 
-  useEffect(() => {
-    //console.log(addItem);
-  }, [addItem]);
-
   return (
     <React.Fragment>
       <IonAlert
