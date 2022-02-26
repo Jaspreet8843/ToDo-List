@@ -188,7 +188,7 @@ const Home: React.FC = () => {
     }
 
     function isChecked(id:any,res:any){
-        setChecked(id,res['detail'].checked);
+        setChecked(id,res['detail'].checked,refreshItems);
         drawLineThrough(id,res['detail'].checked);
     }
 

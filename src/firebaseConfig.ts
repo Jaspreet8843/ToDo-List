@@ -131,13 +131,14 @@ export async function pushItem(item :string, datefor:number, refresh:any){
             });
 }
 
-export async function setChecked(id:any,res:any){
+export async function setChecked(id:any,res:any, refresh:any){
     const db = getFirestore();
 
     const docRef = doc(db,'itemlist',id);
     await updateDoc(docRef,{
         checked:res
     }).then(function(){
+        refresh();
         if(res)
         {
             Toast('Item checked off.')
