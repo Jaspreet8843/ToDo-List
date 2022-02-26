@@ -60,7 +60,7 @@ import { Toast, ToastOptions } from "../features";
               <IonButton color="dark" expand='block' shape='round' size='large' onClick={Register}>
                   Register
               </IonButton>
-              <p>Already registered? <Link to='/login'>Log In</Link></p>
+              <p>Already registered? <Link to='/'>Log In</Link></p>
             </div>
         </IonContent>
     </IonPage>

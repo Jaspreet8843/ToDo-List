@@ -71,7 +71,7 @@ export function issetSession(){
     if (user) {
         console.log("session set");
         var path = window.location.pathname;
-        if(path.localeCompare("/register")==0 || path.localeCompare("/login")==0)
+        if(path.localeCompare("/register")==0 || path.localeCompare("/")==0)
         {  
             window.location.assign('/home');
         }
@@ -81,9 +81,9 @@ export function issetSession(){
         console.log("session not set");
 
         var path = window.location.pathname;
-        if(path.localeCompare("/register")!=0 && path.localeCompare("/login")!=0)
+        if(path.localeCompare("/register")!=0 && path.localeCompare("/")!=0)
         {  
-            window.location.assign('/login');
+            window.location.assign('/');
         }
     }
     });

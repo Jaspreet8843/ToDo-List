@@ -25,11 +25,11 @@ ReactDOM.render(
         <IonRouterOutlet>
           <Route path="/app" component= {App} exact/>
           <Route path="/home" component= {Home} exact/>
-          <Route path="/login" component= {Login} exact/>
+          <Route path="/" component= {Login} exact/>
           <Route path="/register" component= {Register} exact/>
         </IonRouterOutlet>
 
-        {/* <Redirect exact from="/" to="/home" /> */}
+        {/* <Redirect strict from="/" to="/login" /> */}
       </IonReactRouter>
     </IonApp>
   </React.StrictMode>,
